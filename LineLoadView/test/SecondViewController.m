@@ -11,6 +11,8 @@
 #import "PingInvertTransition.h"
 @interface SecondViewController () <UINavigationControllerDelegate>{
     
+    //设置并更新一个 iOS 7 新加入的类的对象。 UIPercentDrivenInteractiveTransition。
+    //这个类的对象会根据我们的手势，来决定我们的自定义过渡的完成度
     UIPercentDrivenInteractiveTransition *percentTransition;
 }
 
@@ -32,7 +34,7 @@
     image.userInteractionEnabled = YES;
     [self.view addSubview:image];
     
-    
+    //设置action, 并设置改变的方法,因为我们是想从第二个页面回到第一个页面,所以设置 UIRectEdgeLeft
     UIScreenEdgePanGestureRecognizer *edgeGes = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(edgePan:)];
     edgeGes.edges = UIRectEdgeLeft;
     [self.view addGestureRecognizer:edgeGes];
@@ -43,31 +45,31 @@
     [_button setTitle:@"" forState:(UIControlStateNormal)];
     _button.frame = image.frame;
     [image addSubview:_button];
-    
-
-    
 }
 -(void)buttonAction{
-    NSLog(@"tag");
-
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 
 - (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
                           interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>) animationController {
+    // 返回我们的自定义过渡
     return percentTransition;
 }
 -(void)edgePan:(UIPanGestureRecognizer *)recognizer{
+    // 计算用户手指划了多远
     CGFloat per = [recognizer translationInView:self.view].x / (self.view.bounds.size.width);
     per = MIN(1.0,(MAX(0.0, per)));
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        // 创建过渡对象，弹出viewController
         percentTransition = [[UIPercentDrivenInteractiveTransition alloc]init];
         [self.navigationController popViewControllerAnimated:YES];
     }else if (recognizer.state == UIGestureRecognizerStateChanged){
+        // 更新 interactive transition 的进度
         [percentTransition updateInteractiveTransition:per];
     }else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled){
+        // 完成或者取消过渡
         if (per > 0.3) {
             [percentTransition finishInteractiveTransition];
         }else{

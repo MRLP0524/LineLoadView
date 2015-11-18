@@ -14,37 +14,41 @@
 @end
 
 @implementation FirstViewController
+
 -(void)viewWillAppear:(BOOL)animated{
+    //设置代理
     self.navigationController.delegate = self;
+    
+    //为了美观,将 NavigationBar 隐藏
     self.navigationController.navigationBarHidden = YES;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    //创建底层图片
     UIImageView *image = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"page1"]];
     image.frame = [UIScreen mainScreen].bounds;
     image.userInteractionEnabled = YES;
     [self.view addSubview:image];
     
+    //创建按钮
     _button = [UIButton buttonWithType:(UIButtonTypeCustom)];
     [_button addTarget:self action:@selector(buttonAction) forControlEvents:(UIControlEventTouchUpInside)];
     [_button setTitle:@"" forState:(UIControlStateNormal)];
     _button.frame =CGRectMake(self.view.bounds.size.width - 70, 15, 50, 50);
-//    _button.backgroundColor = [UIColor redColor];
     [image addSubview:_button];
     
     
     
 }
+//button 的事件
 -(void)buttonAction{
-    NSLog(@"tag");
     SecondViewController *second = [[SecondViewController alloc]init];
     [self.navigationController pushViewController:second animated:YES];
 }
-
+//UINavigationController 的代理方法,实现动画样式的跳转
 #pragma mark - UINavigationControllerDelegate
 - (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
                                    animationControllerForOperation:(UINavigationControllerOperation)operation

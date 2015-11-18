@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SecondViewController : UIViewController
+
 @property(nonatomic,strong)UIButton *button;
+
 @end
